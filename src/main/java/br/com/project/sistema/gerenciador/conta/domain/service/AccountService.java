@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,5 +33,34 @@ public class AccountService {
             log.warn("Erro while get all accounts.", e);
             return Collections.emptyList();
         }
+    }
+
+    public Optional<Account> getAccount(String id) {
+        return accountRepository.findById(id).or(() -> {
+            log.warn("Account with id {} not found", id);
+            return Optional.empty();
+        });
+    }
+
+    public Account updateAccount(String id, Account account) {
+        try {
+            account.setId(id);
+            return accountRepository.save(account);
+        } catch (Exception e) {
+            log.warn("Error while updating account");
+            throw e;
+        }
+
+    }
+
+    public Boolean deleteAccount(String id) {
+        try {
+            accountRepository.deleteById(id);
+            return true;
+        } catch (RuntimeException e) {
+            log.warn("Erro while deleting account with id {}", id);
+            return false;
+        }
+
     }
 }

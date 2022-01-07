@@ -4,20 +4,26 @@ import br.com.project.sistema.gerenciador.conta.domain.model.Account;
 import br.com.project.sistema.gerenciador.conta.domain.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
 public class AccountController {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     @Autowired
     public AccountController(AccountService accountService) {
@@ -33,12 +39,39 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
-    @PostMapping
-    public  ResponseEntity<?> createAccount (@RequestBody Account account) {
-        Account createdAccunt = accountService.createAccount(account);
-        if (Objects.isNull(createdAccunt)) {
+    @GetMapping("{id}")
+    public ResponseEntity<Account> getAccount(@PathVariable String id) {
+        Optional<Account> optionalAccount = accountService.getAccount(id);
+        if (optionalAccount.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(createdAccunt);
+        return ResponseEntity.ok(optionalAccount.get());
+    }
+
+    @PostMapping
+    public  ResponseEntity<?> createAccount (@RequestBody Account account) {
+        Account createdAccount = accountService.createAccount(account);
+        if (Objects.isNull(createdAccount)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(createdAccount);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Account> updateAccount(@PathVariable String id, @RequestBody Account account) {
+        Account editedAccount = accountService.updateAccount(id, account);
+        if (Objects.isNull(editedAccount)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(editedAccount);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteAccount (@PathVariable String id) {
+        Boolean deleted = accountService.deleteAccount(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }
