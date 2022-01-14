@@ -61,6 +61,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Boolean deleteAccount(String id) {
         try {
+            log.info("Deleting account with id {}", id);
             accountRepository.deleteById(id);
             return true;
         } catch (RuntimeException e) {

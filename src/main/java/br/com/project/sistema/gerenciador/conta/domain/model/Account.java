@@ -17,6 +17,6 @@ public class Account {
     private String id;
     private String gmail;
     private String password;
-    private List<String> websites;
+    private List<Website> websites;
     private String project;
 }
