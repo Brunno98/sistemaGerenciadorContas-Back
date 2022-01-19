@@ -6,16 +6,14 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashMap;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document("account")
-public class Account {
+@Document("project")
+public class Project {
     @Id
     private String id;
-    private String gmail;
-    private String password;
+    private String name;
+    private String description;
+
 }

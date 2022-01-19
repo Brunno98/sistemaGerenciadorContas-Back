@@ -47,6 +47,7 @@ public class WebsiteServiceImpl implements WebsiteService {
 
     @Override
     public void deleteWebsite(String id) {
+        // TODO: should remove this website off all webSiteList of Account
         log.info("Deleting website with id {}", id);
         websiteRepository.deleteById(id);
     }
