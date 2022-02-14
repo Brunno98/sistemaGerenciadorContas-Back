@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,9 +26,12 @@ public class WebsiteServiceImpl implements WebsiteService {
     }
 
     @Override
-    public Optional<Website> getWebsite(String id) {
+    public Website getWebsite(Long id) {
         log.info("Getting website with id {}", id);
-        return websiteRepository.findById(id);
+        return websiteRepository.findById(id).orElseThrow(() -> {
+            log.warn("website not found for id {}.", id);
+            return new RuntimeException("website not found for id " + id);
+        });
     }
 
     @Override
@@ -39,15 +41,20 @@ public class WebsiteServiceImpl implements WebsiteService {
     }
 
     @Override
-    public Website updateWebsite(String id, Website website) {
+    public Website updateWebsite(Long id, Website website) {
         log.info("Updating website with id {}", id);
+        Website currentWebsite = websiteRepository.findById(id).orElseThrow(() -> {
+            log.warn("Website not found with id {}.", id);
+            return new RuntimeException("Website not found with id " + id);
+        });
+
         website.setId(id);
+        website.setServiceAccounts(currentWebsite.getServiceAccounts());
         return websiteRepository.save(website);
     }
 
     @Override
-    public void deleteWebsite(String id) {
-        // TODO: should remove this website off all webSiteList of Account
+    public void deleteWebsite(Long id) {
         log.info("Deleting website with id {}", id);
         websiteRepository.deleteById(id);
     }

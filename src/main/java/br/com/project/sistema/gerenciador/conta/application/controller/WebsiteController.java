@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/website")
@@ -33,12 +33,12 @@ public class WebsiteController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Website> getWebsite(@PathVariable String id) {
-        Optional<Website> website = service.getWebsite(id);
-        if (website.isEmpty()) {
+    public ResponseEntity<Website> getWebsite(@PathVariable Long id) {
+        Website website = service.getWebsite(id);
+        if (Objects.isNull(website)) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(website.get());
+        return ResponseEntity.ok(website);
     }
 
     @PostMapping
@@ -48,16 +48,15 @@ public class WebsiteController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Website> updateWebsite(@PathVariable String id, @RequestBody Website website) {
+    public ResponseEntity<Website> updateWebsite(@PathVariable Long id, @RequestBody Website website) {
         Website updatedWebsite = service.updateWebsite(id, website);
         return ResponseEntity.ok(updatedWebsite);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteWebsite(@PathVariable String id) {
+    public ResponseEntity<?> deleteWebsite(@PathVariable Long id) {
         service.deleteWebsite(id);
         return ResponseEntity.noContent().build();
     }
-
 
 }

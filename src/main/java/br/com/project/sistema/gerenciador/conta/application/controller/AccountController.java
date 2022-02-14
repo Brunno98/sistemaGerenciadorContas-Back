@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
@@ -38,12 +37,12 @@ public class AccountController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Account> getAccount(@PathVariable String id) {
-        Optional<Account> optionalAccount = accountService.getAccount(id);
-        if (optionalAccount.isEmpty()) {
+    public ResponseEntity<Account> getAccount(@PathVariable Long id) {
+        Account account = accountService.getAccount(id);
+        if (Objects.isNull(account)) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(optionalAccount.get());
+        return ResponseEntity.ok(account);
     }
 
     @PostMapping
@@ -56,16 +55,16 @@ public class AccountController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Account> updateAccount(@PathVariable String id, @RequestBody Account account) {
-        Account editedAccount = accountService.updateAccount(id, account);
-        if (Objects.isNull(editedAccount)) {
+    public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account account) {
+        Account updatedAccount = accountService.updateAccount(id, account);
+        if (Objects.isNull(updatedAccount)) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(editedAccount);
+        return ResponseEntity.ok(updatedAccount);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteAccount (@PathVariable String id) {
+    public ResponseEntity<?> deleteAccount (@PathVariable Long id) {
         Boolean deleted = accountService.deleteAccount(id);
         if (deleted) {
             return ResponseEntity.noContent().build();
